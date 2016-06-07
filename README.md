@@ -3,7 +3,7 @@
 This is not a production code. Only for testing purpose!
 
 
-# istructions
+# instructions
 
 1. Add to galaxy/config/too_conf.xml
 
