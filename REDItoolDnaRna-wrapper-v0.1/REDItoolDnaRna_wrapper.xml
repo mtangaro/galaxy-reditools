@@ -1,4 +1,4 @@
-<tool id="reditools_DnaRna_02" name="REDItoolDnaRna-0.1" version="0.1.0">
+<tool id="reditools_DnaRna" name="REDItoolDnaRna" version="0.1.0">
   <description>for each sequence in a file</description>
   <command interpreter="python">
     <![CDATA[  
