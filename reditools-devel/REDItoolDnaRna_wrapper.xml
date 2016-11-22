@@ -1,32 +1,53 @@
-<tool id="reditools_DnaRna_devel" name="REDItoolDnaRna-devel" version="0.1.99">
-  <description>for each sequence in a file</description>
-  <command interpreter="python">
-    <![CDATA[  
-    REDItoolDnaRna_wrapper.py 
+<tool id="reditools_wrapper_devel" name="reditools_wrapper_devel" version="0.0.99">
+  <description>python scripts for RNA editing detection by RNA-Seq data</description>
+  <command>
+    <![CDATA[
+      
+      python "$__tool_directory__/REDItoolDnaRna_wrapper.py"
 
-      #if $library.type == "single" or $library.type == "single_collection"
+      ##---
+      ## Single/Paired file
+
+      #if $library.type == "single" or $library.type == "paired" 
 
         ## Input RNA-Seq BAM file
-        -i "$library.input_1"
+        -i "$library.rna_input"
 
         ## Sort RNA-Seq
-        #if str( $library.sort_1 ) == "true":
+        #if str( $library.rna_sort ) == "true":
           -I
         #end if
 
-      #elif $library.type == "paired"
+        #if $library.type == "paired"
 
-        -i "$library.input_1"
+          ## DNA-Seq file
+          -j "$library.dna_input"
 
-        #if str( $library.sort_1 ) == "true":
+          ## Sort DNA-Seq
+          #if str( $library.dna_sort ) == "true":
+            -J
+          #end if
+
+        #end if
+
+      ##---
+      ## Paired collection
+
+      #elif $library.type == "paired_collection"
+
+        ## Input RNA-Seq BAM file
+        -i "$library.rna_dna_paired_input.forward"
+
+        ## Sort RNA-Seq
+        #if str( $library.rna_sort ) == "true":
           -I
         #end if
 
         ## DNA-Seq file
-        -j "$library.input_2"
+        -j "$library.rna_dna_paired_input['reverse']"
 
         ## Sort DNA-Seq
-        #if str( $library.sort_2 ) == "true":
+        #if str( $library.dna_sort ) == "true":
           -J
         #end if
 
@@ -47,29 +68,30 @@
   <inputs>
     <!-- single/paired -->
      <conditional name="library">
-       <param name="type" type="select" label="Is this single or paired library">
+       <param name="type" type="select" label="Single or Paired, file or collection">
          <option value="single">Single file</option>
          <option value="paired">Paired files</option>
-         <option value="single_collection">Single Dataset Collection</option>
          <option value="paired_collection">Paired Dataset Collection</option>
        </param>
 
        <when value="single">
-         <param name="input_1" format="bam" type="data" label="RNA-Seq BAM file."/>
-         <param name="sort_1" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
+         <param name="rna_input" format="bam" type="data" label="RNA-Seq BAM file."/>
+         <param name="rna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
        </when>
 
        <when value="paired">
-         <param name="input_1" format="bam" type="data" label="RNA-Seq BAM file."/>
-         <param name="sort_1" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
-         <param name="input_2" format="bam" type="data" label="DNA-Seq BAM files separated by comma or folder containing BAM files." help=" Note that chromosome/region names in the reference must match chromosome/region names in BAMs files."/>
-         <param name="sort_2" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input DNA-Seq BAM file." />
+         <param name="rna_input" format="bam" type="data" label="RNA-Seq BAM file."/>
+         <param name="rna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
+         <param name="dna_input" format="bam" type="data" label="DNA-Seq BAM files separated by comma or folder containing BAM files." help=" Note that chromosome/region names in the reference must match chromosome/region names in BAMs files."/>
+         <param name="dna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input DNA-Seq BAM file." />
        </when>
 
-       <when value="single_collection">
-         <param name="input_1" format="bam" type="data_collection" collection_type="list" label="Sort input RNA-Seq BAM file." />
-         <param name="sort_1" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
+       <when value="paired_collection">
+         <param name="rna_dna_paired_input" type="data_collection" collection_type="paired" label="RNA/DNA paired collection" />
+         <param name="rna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
+         <param name="dna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input DNA-Seq BAM file." />
        </when>
+
 
     </conditional>
 
@@ -82,7 +104,8 @@
   
   <outputs>
     <!-- data format="tabular" name="output" /-->
-    <collection name="output" type="list" label="List"/>
+    <data format="html" name="html_file" label="${tool.name} on ${on_string}: Web Page"/>
+    <data format="tabular" name="output" label="${tool.name} on ${on_string}: Raw Data"/>
   </outputs>
 
   <tests>
