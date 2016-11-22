@@ -1,14 +1,17 @@
-<tool id="reditools_wrapper_devel" name="reditools_wrapper_devel" version="0.0.99">
+<tool id="reditools_wrapper_devel" name="REDItoolDnaRna-devel" version="0.0.99">
   <description>python scripts for RNA editing detection by RNA-Seq data</description>
+    <macros>
+        <import>reditools_wrapper_macros.xml</import>
+    </macros>
   <command>
     <![CDATA[
       
       python "$__tool_directory__/REDItoolDnaRna_wrapper.py"
 
-      ##---
+      ############################
       ## Single/Paired file
 
-      #if $library.type == "single" or $library.type == "paired" 
+      #if $library.type == "single" or $library.type == "paired":
 
         ## Input RNA-Seq BAM file
         -i "$library.rna_input"
@@ -30,10 +33,16 @@
 
         #end if
 
-      ##---
+        ## Output options
+        @OUTPUT_OPTIONS@
+
+        ## Load reditools advanced options
+        ##@reditools_advanced_options@
+
+      ############################
       ## Paired collection
 
-      #elif $library.type == "paired_collection"
+      #elif $library.type == "paired_collection":
 
         ## Input RNA-Seq BAM file
         -i "$library.rna_dna_paired_input.forward"
@@ -51,16 +60,13 @@
           -J
         #end if
 
+        ## Output options
+        @OUTPUT_OPTIONS@
+
+        ## Load reditools advanced options
+        ##@reditools_advanced_options@
+
       #end if
-
-      ## Reference file
-      -f "${reference}"
-
-      ## Output file
-      -1 "${output}"
-
-      ## Set number of threads
-      -t "\${GALAXY_SLOTS:-4}"
 
     ]]>
   </command>
@@ -92,8 +98,7 @@
          <param name="dna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input DNA-Seq BAM file." />
        </when>
 
-
-    </conditional>
+      </conditional>
 
     <!-- reference genome -->
     <param name="reference" format="fasta" type="data" label="Reference file in fasta format." help=" Note that each chromosome/region must be present in a single BAM file only."/>
@@ -101,11 +106,12 @@
     <!-- read group settings -->
 
   </inputs>
-  
+ 
+  <!-- define outputs -->
+
   <outputs>
-    <!-- data format="tabular" name="output" /-->
-    <data format="html" name="html_file" label="${tool.name} on ${on_string}: Web Page"/>
-    <data format="tabular" name="output" label="${tool.name} on ${on_string}: Raw Data"/>
+    <data format="html" name="html_file" label="${tool.name} on ${on_string}: Web Page" />
+    <data format="tabular" name="output" label="${tool.name} on ${on_string}: Raw Data" />
   </outputs>
 
   <tests>

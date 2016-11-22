@@ -1,0 +1,19 @@
+<macros>
+  <!-- Import -->
+
+  <token name="@OUTPUT_OPTIONS@">
+    ## Reference file
+    -f "${reference}"
+
+    ## Output file
+    -1 "${output}"
+
+    ## Set number of threads
+    -t "\${GALAXY_SLOTS:-4}"
+  </token>
+
+  <token name="@reditools_advanced_options@">
+    ## Add advanced options here  
+  </token>
+
+</macros>
