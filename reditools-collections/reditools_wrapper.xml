@@ -1,16 +1,16 @@
-<tool id="reditools_collection" name="REDItoolDnaRna with Collections" version="0.1.99">
-  <description>for each sequence in a file</description>
+<tool id="reditools_collections" name="REDItoolDnaRna with Collections" version="0.1.99">
+  <description>python scripts for RNA editing detection by RNA-Seq data</description>
   <command>
     <![CDATA[  
-      #for $key in $input_1.keys()#
+      #for $key in $rna_input.keys()#
 
-        python "$__tool_directory__/REDItoolDnaRna_wrapper.py"
+        python "$__tool_directory__/reditools_wrapper.py"
 
         ## Input RNA-Seq BAM file
-        -i $input_1[$key]
+        -i $rna_input[$key]
 
         ## Sort RNA-Seq
-        #if str( $sort_1 ) == "true":
+        #if str( $rna_sort ) == "true":
           -I
         #end if
 
@@ -28,12 +28,12 @@
   </command>
  
   <inputs>
-    <param name="input_1" type="data_collection" collection_type="list" label="Input" help="Input collection..." format="bam" />
-    <param name="sort_1" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
+    <param name="rna_input" type="data_collection" collection_type="list" label="Input" help="Input collection..." format="bam" />
+    <param name="rna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
     <param name="reference" format="fasta" type="data" label="Reference file in fasta format." help=" Note that each chromosome/region must be present in a single BAM file only."/>
   </inputs>
   <outputs>
-    <collection name="output" type="list" label="Output List" structured_like="input_1" format="tabular" />
+    <collection name="output" type="list" label="Output List" structured_like="rna_input" format="tabular" />
   </outputs>
 
   <tests>
