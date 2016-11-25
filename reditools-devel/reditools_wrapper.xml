@@ -1,4 +1,4 @@
-<tool id="reditools_wrapper_devel" name="REDItoolDnaRna-devel" version="0.0.99">
+<tool id="reditools_wrapper_devel" name="REDItoolDnaRna-devel" version="0.1.99">
   <description>python scripts for RNA editing detection by RNA-Seq data</description>
     <macros>
         <import>reditools_wrapper_macros.xml</import>
@@ -6,7 +6,7 @@
   <command>
     <![CDATA[
       
-      python "$__tool_directory__/REDItoolDnaRna_wrapper.py"
+      python "$__tool_directory__/reditools_wrapper.py"
 
       ############################
       ## Single/Paired file
