@@ -33,7 +33,8 @@
     <param name="reference" format="fasta" type="data" label="Reference file in fasta format." help=" Note that each chromosome/region must be present in a single BAM file only."/>
   </inputs>
   <outputs>
-    <collection name="output" type="list" label="Output List" structured_like="rna_input" format="tabular" />
+    <data format="html" name="html_file" label="${tool.name} on ${on_string}: Web Page" />
+    <collection format="tabular" name="output" type="list" structured_like="rna_input" label="${tool.name} on ${on_string}: Raw Data" />
   </outputs>
 
   <tests>
