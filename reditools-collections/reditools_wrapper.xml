@@ -18,12 +18,14 @@
         -f "${reference}"
 
         ## Output file
-        -1 "$output[$key]"
+        --out-file "$output[$key]"
 
         ## Set number of threads
         -t "\${GALAXY_SLOTS:-4}";
 
+        $__tool_directory__/pager.sh $output[$key] >> $html_file;
       #end for#
+
     ]]>
   </command>
  
@@ -32,6 +34,7 @@
     <param name="rna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
     <param name="reference" format="fasta" type="data" label="Reference file in fasta format." help=" Note that each chromosome/region must be present in a single BAM file only."/>
   </inputs>
+
   <outputs>
     <data format="html" name="html_file" label="${tool.name} on ${on_string}: Web Page" />
     <collection format="tabular" name="output" type="list" structured_like="rna_input" label="${tool.name} on ${on_string}: Raw Data" />
