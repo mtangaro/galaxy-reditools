@@ -26,6 +26,9 @@ def parse_cli_options():
   parser.add_argument( '-i', dest='result', help='')
   parser.add_argument( '-p', dest='path', help='')
   parser.add_argument( '-o', dest='output directory', help='')
+  parser.add_argument( '-s', dest='sample id', help='')
+  parser.add_argument( '-g', dest='group id', help='')
+  
   return parser.parse_args()
 
 
