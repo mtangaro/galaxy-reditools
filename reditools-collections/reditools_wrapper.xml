@@ -30,9 +30,9 @@
         #### Update html file ####
         python $__tool_directory__/read-outputs.py
           -i $output[$key]
-          -p $output[$key]
-          -o $html_file
-          -d ${html_file.files_path};
+          -r $key
+          -h $html_file
+          -o ${html_file.files_path};
 
       #end for#
 

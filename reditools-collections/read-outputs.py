@@ -11,12 +11,12 @@ pid=str(os.getpid()+random.randint(0,999999999))
 def parse_cli_options():
   parser = argparse.ArgumentParser(description='Read reditools data tables', formatter_class=argparse.RawTextHelpFormatter)
   parser.add_argument( '-i', dest='result', help='')
-  parser.add_argument( '-p', dest='path', help='')
-  parser.add_argument( '-o', dest='output', help='')
-  parser.add_argument( '-d', dest='outdir', help='')
+  parser.add_argument( '-r', dest='rna_in', help='')
+  parser.add_argument( '-d', dest='dna_in', help='')
+  parser.add_argument( '-h', dest='html', help='')
+  parser.add_argument( '-o', dest='outdir', help='')
   parser.add_argument( '-s', dest='sample_id', help='')
   parser.add_argument( '-g', dest='group_id', help='')
-  parser.add_argument( '-j', '--inputfilename', dest='input_filename', help='')
   parser.add_argument( '-t', '--init_html', dest='init_html', action='store_true', help='')
   parser.add_argument( '-c', '--close_html', dest='close_html', action='store_true', help='')
  
@@ -64,13 +64,13 @@ def create_out_dir(directory):
 def create_output_symlink(source, linkname):
   os.symlink(source, linkname)
 
-def update_html(ref,basepath):
+def update_html(rna_in, fout):
   '''
   Update output html file
   '''
   html = []
   html.append('<tr><td>')
-  html.append('RNA BAM file</td><td>DNA BAM file</td><td>ID sample</td><td>ID group</td><td><a href="%s">%s</a>' % (ref+'.txt',basepath))
+  html.append('%s</td><td>DNA BAM file</td><td>ID sample</td><td>ID group</td><td><a href="%s">%s</a>' % (rna_in, fout+'.txt', fout) )
   html.append('</td></tr>')
   return html
 
@@ -81,11 +81,11 @@ def main():
   options = parse_cli_options()
 
   if(options.init_html):
-    init_html_file(options.output)
+    init_html_file(options.html)
     return
 
   if(options.close_html):
-    close_html_file(options.output)
+    close_html_file(options.html)
     return
 
   create_out_dir(options.outdir)
@@ -95,8 +95,8 @@ def main():
 
   create_output_symlink(options.result, filepath)
 
-  fhtml = update_html(filename, filename)
-  fin = file(options.output,'a')
+  fhtml = update_html(options.rna_in, filename)
+  fin = file(options.html,'a')
   fin.write('\n'.join(fhtml))
   fin.write('\n')
   fin.close()
