@@ -1,7 +1,11 @@
 <tool id="reditools_collections" name="REDItoolDnaRna with Collections" version="0.1.99">
   <description>python scripts for RNA editing detection by RNA-Seq data</description>
   <command>
-    <![CDATA[  
+    <![CDATA[
+
+      #### Create html output file ####
+      python $__tool_directory__/read-outputs.py -t -o $html_file;
+ 
       #for $key in $rna_input.keys()#
 
         python "$__tool_directory__/reditools_wrapper.py"
@@ -23,8 +27,17 @@
         ## Set number of threads
         -t "\${GALAXY_SLOTS:-4}";
 
-        $__tool_directory__/pager.sh $output[$key] >> $html_file;
+        #### Update html file ####
+        python $__tool_directory__/read-outputs.py
+          -i $output[$key]
+          -p $output[$key]
+          -o $html_file
+          -d ${html_file.files_path};
+
       #end for#
+
+      #### Close html output file ####
+      #python $__tool_directory__/read-outputs.py -c -o $html_file;
 
     ]]>
   </command>
