@@ -13,7 +13,7 @@ def parse_cli_options():
   parser.add_argument( '-i', dest='result', help='')
   parser.add_argument( '-r', dest='rna_in', help='')
   parser.add_argument( '-d', dest='dna_in', help='')
-  parser.add_argument( '-h', dest='html', help='')
+  parser.add_argument( '-m', dest='html', help='')
   parser.add_argument( '-o', dest='outdir', help='')
   parser.add_argument( '-s', dest='sample_id', help='')
   parser.add_argument( '-g', dest='group_id', help='')
@@ -56,7 +56,6 @@ def close_html_file(fout):
   f.close()
   return f
 
-
 def create_out_dir(directory):
   if not os.path.exists(directory):
     os.makedirs(directory)
@@ -64,18 +63,29 @@ def create_out_dir(directory):
 def create_output_symlink(source, linkname):
   os.symlink(source, linkname)
 
-def update_html(rna_in, fout):
+def update_html(rna_in, dna_in, sid, gid, fout):
   '''
   Update output html file
   '''
   html = []
   html.append('<tr><td>')
-  html.append('%s</td><td>DNA BAM file</td><td>ID sample</td><td>ID group</td><td><a href="%s">%s</a>' % (rna_in, fout+'.txt', fout) )
+  html.append('%s</td><td>%s</td><td>%s</td><td>%s</td><td><a href="%s">%s</a>' % (rna_in, dna_in, sid, gid, fout+'.txt', fout) )
   html.append('</td></tr>')
   return html
 
-
 #def create_tab_list_file():
+
+def set_sample_id(sid, n):
+  if not sid:
+    return n
+  else:
+    return sid
+
+def set_group_id(gid, n):
+  if not gid:
+    return n
+  else:
+    return gid
 
 def main():
   options = parse_cli_options()
@@ -90,12 +100,15 @@ def main():
 
   create_out_dir(options.outdir)
 
-  filename = 'outtable_' + pid
+  filename = 'outTable_' + pid
   filepath = str(options.outdir) + '/' + filename + '.txt'
 
   create_output_symlink(options.result, filepath)
 
-  fhtml = update_html(options.rna_in, filename)
+  sample_id = set_sample_id(options.sample_id, pid)
+  group_id = set_group_id(options.group_id, 'example')
+
+  fhtml = update_html(options.rna_in, options.dna_in, sample_id, group_id, filename)
   fin = file(options.html,'a')
   fin.write('\n'.join(fhtml))
   fin.write('\n')
