@@ -70,8 +70,8 @@ Options:
 --addP  Add positions for reads
 """
 
-# import modules
-import optparse, os, shutil, subprocess, sys, tempfile
+import argparse
+import os, shutil, subprocess, sys, tempfile
 #try: import pysam
 #except: sys.exit('Pysam module not found.')
 
@@ -90,28 +90,33 @@ def check_int(s):
 ##____________________________________
 
 def __main__():
+
+   parser = argparse.ArgumentParser(description='REDITools wrapper parsed options.')
+
    # parse REDItoolDnaRna command line options
-   parser = optparse.OptionParser()
-   parser.add_option( '-i', dest='input_rna_seq', help='RNA-Seq BAM file' )
-   parser.add_option( '-j', dest='input_dna_seq', help='DNA-Seq BAM file' )
-   parser.add_option( '-I', action='store_true', dest='sort_rna_seq', help='Sort input RNA-Seq BAM file' )
-   parser.add_option( '-J', action='store_true', dest='sort_dna_seq', help='Sort input DNA-Seq BAM file' )
-   parser.add_option( '-f', dest='reference', help='Reference in fasta file' )
-   parser.add_option( '-o', dest='outfolder', help='Output folder [rediFolder_%s]' )
-   parser.add_option( '-t', dest='threads', help='Number of threads [1]' )
+   parser.add_argument( '-i', dest='input_rna_seq', help='RNA-Seq BAM file' )
+   parser.add_argument( '-j', dest='input_dna_seq', help='DNA-Seq BAM file' )
+   parser.add_argument( '-I', action='store_true', dest='sort_rna_seq', help='Sort input RNA-Seq BAM file' )
+   parser.add_argument( '-J', action='store_true', dest='sort_dna_seq', help='Sort input DNA-Seq BAM file' )
+   parser.add_argument( '-f', dest='reference', help='Reference in fasta file' )
+   parser.add_argument( '-o', dest='outfolder', help='Output folder [rediFolder_%s]' )
+   parser.add_argument( '-t', dest='threads', help='Number of threads [1]' )
+
    # wrapper options
-   parser.add_option( '-1', dest='output1', help='Wrapper output file' )
-   (options, args) = parser.parse_args()
+   parser.add_argument( '--out-dir', dest='outdir', help='Wrapper output directory' )
+   parser.add_argument( '--out-file', dest='outfile', help='Wrapper output file' )
 
-   command = 'REDItoolDnaRna.py -i %s -f %s -t %s' % ( options.input_rna_seq, options.reference, options.threads )
+   args = parser.parse_args()
 
-   if options.input_dna_seq is not None:
-     command += ' -j %s' % ( options.input_dna_seq )
+   command = 'REDItoolDnaRna.py -i %s -f %s -t %s' % ( args.input_rna_seq, args.reference, args.threads )
 
-   if options.sort_rna_seq == True:
+   if args.input_dna_seq is not None:
+     command += ' -j %s' % ( args.input_dna_seq )
+
+   if args.sort_rna_seq == True:
      command += ' -I'
 
-   if options.sort_dna_seq == True:
+   if args.sort_dna_seq == True:
      command += ' -J'
 
    proc = subprocess.Popen( args=command, shell=True,  stdout=subprocess.PIPE, stderr=subprocess.PIPE )
@@ -133,11 +138,11 @@ def __main__():
    if os.path.isfile(fname) == False:
      sys.exit(3)
 
-   mvoutput = 'cat rediFolder_%s/DnaRna_%s/outTable_%s > %s' % ( output_random_index, output_random_index, output_random_index, options.output1 )
+   mvoutput = 'cat rediFolder_%s/DnaRna_%s/outTable_%s > %s' % ( output_random_index, output_random_index, output_random_index, args.outfile )
    os.system( mvoutput ) 
    
    print 'Job command: %s' % ( command )
-   print 'Number of threads: %s' % ( options.threads )
+   print 'Number of threads: %s' % ( args.threads )
    print 'Job pid: %s' % ( output_random_index )
    print stdErrValue
 
