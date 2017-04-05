@@ -4,7 +4,7 @@
     <![CDATA[
 
       #### Create html output file ####
-      python $__tool_directory__/read-outputs.py -t -o $html_file;
+      python $__tool_directory__/read-outputs.py -t -m $html_file;
  
       #for $key in $rna_input.keys()#
 
@@ -31,13 +31,13 @@
         python $__tool_directory__/read-outputs.py
           -i $output[$key]
           -r $key
-          -h $html_file
+          -m $html_file
           -o ${html_file.files_path};
 
       #end for#
 
       #### Close html output file ####
-      #python $__tool_directory__/read-outputs.py -c -o $html_file;
+      #python $__tool_directory__/read-outputs.py -c -m $html_file;
 
     ]]>
   </command>
