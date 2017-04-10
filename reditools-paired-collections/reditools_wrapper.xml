@@ -2,55 +2,29 @@
   <description>python scripts for RNA editing detection by RNA-Seq data</description>
   <command>
     <![CDATA[
+      i=0;
+      mkdir output_dir; cd output_dir;
 
-      #### Create html output file ####
-      python $__tool_directory__/read-outputs.py -t -m $html_file;
- 
-      #for $key in $rna_input.keys()#
+      #for $key in $rna_input
+        i=\$((i+1));
+        sample_id="output\$i.tabular";
+        cat $key.forward >> \$sample_id;
+        cat $key.reverse >> \$sample_id;
 
-        python "$__tool_directory__/reditools_wrapper.py"
-
-        ## Input RNA-Seq BAM file
-        -i $rna_input[$key]
-
-        ## Sort RNA-Seq
-        #if str( $rna_sort ) == "true":
-          -I
-        #end if
-
-        ## Reference file
-        -f "${reference}"
-
-        ## Output file
-        --out-file "$output[$key]"
-
-        ## Set number of threads
-        -t "\${GALAXY_SLOTS:-4}";
-
-        #### Update html file ####
-        python $__tool_directory__/read-outputs.py
-          -i $output[$key]
-          -r $key
-          -m $html_file
-          -o ${html_file.files_path};
-
-      #end for#
-
-      #### Close html output file ####
-      #python $__tool_directory__/read-outputs.py -c -m $html_file;
+      #end for
 
     ]]>
   </command>
  
   <inputs>
-    <param name="rna_dna_paired_input" type="data_collection" collection_type="list:paired" label="RNA/DNA paired collection" />
-    <param name="rna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
-    <param name="reference" format="fasta" type="data" label="Reference file in fasta format." help=" Note that each chromosome/region must be present in a single BAM file only."/>
+    <param name="rna_input" type="data_collection" collection_type="list:paired" label="RNA/DNA paired collection" />
   </inputs>
 
   <outputs>
     <data format="html" name="html_file" label="${tool.name} on ${on_string}: Web Page" />
-    <collection format="tabular" name="output" type="list" label="${tool.name} on ${on_string}: Raw Data" />
+    <collection name="output" type="list" label="${tool.name} on ${on_string}: Raw Data" >
+        <discover_datasets pattern="__designation__" ext="tabular" directory="output_dir" />
+    </collection>
   </outputs>
 
   <tests>
