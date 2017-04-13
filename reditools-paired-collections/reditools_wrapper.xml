@@ -3,7 +3,7 @@
   <command>
     <![CDATA[
       i=0;
-      mkdir output_dir; cd output_dir;
+      mkdir $html_file.files_path; cd $html_file.files_path;
 
       #for $key in $rna_input
         i=\$((i+1));
@@ -23,7 +23,7 @@
   <outputs>
     <data format="html" name="html_file" label="${tool.name} on ${on_string}: Web Page" />
     <collection name="output" type="list" label="${tool.name} on ${on_string}: Raw Data" >
-        <discover_datasets pattern="__designation__" ext="tabular" directory="output_dir" />
+        <discover_datasets pattern="__designation__" ext="tabular" directory="$html_file.files_path" />
     </collection>
   </outputs>
 
